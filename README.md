@@ -36,7 +36,7 @@ Run the following commands in the terminal:
   * pip install matplotlib
 2. The code to the program can be found on this github repository: [https://github.com/EyeanL/2DTrackingProgram](https://github.com/EyeanL/2DTrackingProgram) 
 
-To run programs from ang github repositories follow this guide for vscode:  
+To run programs from any github repositories follow this guide for vscode:  
 
 [https://www.youtube.com/watch?v=XKWh3C3B1uA&ab_channel=RethinkingUI](https://www.youtube.com/watch?v=XKWh3C3B1uA&ab_channel=RethinkingUI) 
 
