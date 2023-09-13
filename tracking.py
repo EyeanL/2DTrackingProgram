@@ -19,7 +19,6 @@ class Tracking:
 
 	frame_per_second = 120
 	frame_dt = 1 / frame_per_second
-	measurement = 0.05
 
 	if camera: 
 		vid  = cv2.VideoCapture(0)
@@ -78,6 +77,7 @@ class Tracking:
 
 	mag = obj_profile.find_magnitude()
 	starting_ang = np.arctan2(obj_profile.pos[1], obj_profile.pos[0])
+	print(starting_ang)
 
 	# Create arrays for each 2-dimensional variable + magnitude and angles for accessibility
 
@@ -95,7 +95,6 @@ class Tracking:
 
 	while frame_number < number_of_frames:
 		_,frame = vid.read()
-
 		frame = imutils.resize(frame,width = 1080) 
 
 		# Define a boolean 'track_success' that will return true or false if the tracker is able to return a result
@@ -117,7 +116,6 @@ class Tracking:
 
 		# Update the time accordingly to the fps of the video and take the position of the object
 
-		time = obj_profile.update_time(motion_prof, frame_number - 1, frame_dt)
 		pos = obj_profile.pos 
 
 		# Take the angle of the object using the arctan2 function then return an angle from 0 to 2pi in orientation of a Cartesian Plane
@@ -131,9 +129,11 @@ class Tracking:
 		# Run through every frame and use the methods in profile to record the motion profile
 
 		if(frame_number > 1):
+			time = obj_profile.update_time(motion_prof, frame_number - 1, frame_dt)
 			vel = obj_profile.find_velocity(motion_prof, frame_number - 1, frame_dt)	
 			angvel = obj_profile.find_angvelocity(angsmotion_prof, frame_number - 1, frame_dt)	
-		else:
+		else: 
+			time = np.array([0, 0])
 			vel = np.array([0, 0])
 			angvel = 0
 	
@@ -151,8 +151,9 @@ class Tracking:
 	
 		obj_profile = profile(scaling_factor, origin, OBJ, time, vel, acc, ang, angvel, angacc)
 		mag = obj_profile.find_magnitude()
-		angs = obj_profile.angs_motion
 		mag_arr = np.append(mag_arr, mag.reshape(1,3), axis = 0)
+		angs = obj_profile.angs_motion
+
 		angsmotion_prof = np.append(angsmotion_prof, angs, axis = 0)
 		motion_prof = np.append(motion_prof, obj_profile.new_motion, axis = 0)
 		frame_number = frame_number + 1
@@ -169,6 +170,15 @@ class Tracking:
 
 	vid.release()
 	cv2.destroyAllWindows()
+
+	# remove the repeated row used for setting the initial condition
+
+	time_arr = np.delete(time_arr, 0, 0)
+	pos_arr = np.delete(pos_arr, 0, 0)
+	vel_arr = np.delete(vel_arr, 0, 0)
+	acc_arr = np.delete(acc_arr, 0, 0)
+	mag_arr = np.delete(mag_arr, 0, 0)
+	angsmotion_prof = np.delete(angsmotion_prof, 0, 0)
 
 	# Creating a text file for the data 
 

@@ -58,7 +58,7 @@ class profile(object):
     
     def find_angle(self, angles, angsmotion_prof, frame_number):
         #find the angle difference between the current and previous frame
-        res_angle = angles[frame_number] - angles[frame_number - 1]
+        res_angle = angles[frame_number + 1] - angles[frame_number]
         #check for angle wrap arounds and adjust accordingly
         if(res_angle > np.pi):
             res_angle = res_angle - (2 * np.pi)
